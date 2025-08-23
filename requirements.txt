@@ -1,0 +1,61 @@
+# Application VTC avec Monitoring de Sécurité Complet
+# Requirements pour production
+
+# Framework principal
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# Base de données
+sqlalchemy==2.0.23
+alembic==1.12.1
+psycopg2-binary==2.9.9
+
+# Authentification et sécurité
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.6
+bcrypt==4.1.2
+
+# Configuration et validation
+pydantic==2.5.0
+pydantic-settings==2.1.0
+python-dotenv==1.0.0
+
+# Chiffrement et sécurité avancée
+cryptography==41.0.8
+email-validator==2.2.0
+
+# Monitoring et métriques
+psutil==7.0.0
+prometheus-client==0.19.0
+
+# Géolocalisation
+geopy==2.4.1
+
+# Utilitaires
+python-dateutil==2.8.2
+pytz==2023.3
+phonenumbers==8.13.26
+
+# Développement et tests (optionnel)
+pytest==7.4.3
+pytest-asyncio==0.21.1
+httpx==0.25.2
+
+# Logging et audit
+structlog==23.2.0
+
+# Alertes et notifications
+aiosmtplib==3.0.1
+
+# Cache et performance
+redis==5.0.1
+aioredis==2.0.1
+
+# Validation et conformité
+jsonschema==4.20.0
+
+# Utilitaires système
+click==8.1.7
+rich==13.7.0
+

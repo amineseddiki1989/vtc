@@ -1,0 +1,34 @@
+fastapi==0.115.14
+uvicorn[standard]==0.34.3
+pydantic==2.11.7
+pydantic-settings==2.10.1
+sqlalchemy==2.0.41
+PyJWT==2.10.1
+bcrypt==4.3.0
+python-dotenv==1.1.1
+email-validator==2.2.0
+python-multipart==0.0.20
+python-jose[cryptography]==3.5.0
+geopy==2.4.1
+
+# Dépendances pour les métriques et monitoring
+psutil==6.1.0
+
+
+# Paiements
+stripe==11.1.1
+
+
+
+# PostgreSQL
+psycopg2-binary==2.9.9
+
+
+# HTTP asynchrone pour ETA service
+aiohttp==3.9.1
+
+
+# Firebase pour notifications push
+firebase-admin==6.5.0
+pyfcm==1.5.4
+
