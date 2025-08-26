@@ -59,3 +59,9 @@ jsonschema==4.20.0
 click==8.1.7
 rich==13.7.0
 
+
+
+pyjwt==2.8.0
+asyncpg==0.29.0
+
+
