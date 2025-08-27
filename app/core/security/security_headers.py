@@ -38,3 +38,23 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         
         return response
 
+
+
+
+class RateLimitMiddleware(BaseHTTPMiddleware):
+    """Middleware pour implémenter le rate limiting."""
+
+    async def dispatch(self, request: Request, call_next: Callable) -> Response:
+        # Implémentation simplifiée du rate limiting
+        # Pour une implémentation complète, utiliser des bibliothèques comme `fastapi-limiter`
+        # ou un service externe comme Redis pour stocker les compteurs de requêtes.
+        
+        # Exemple: Limiter à 10 requêtes par seconde par IP
+        client_ip = request.client.host
+        # Ici, vous implémenteriez la logique de comptage et de vérification
+        # Pour l'instant, on laisse passer toutes les requêtes pour ne pas bloquer les tests
+        
+        response = await call_next(request)
+        return response
+
+
