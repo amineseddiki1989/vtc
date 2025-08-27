@@ -5,6 +5,7 @@ from app.core.database.base import Base
 
 class Rating(Base):
     __tablename__ = "ratings"
+    __table_args__ = {"extend_existing": True}
 
     id = Column(String, primary_key=True, index=True)
     trip_id = Column(String, ForeignKey("trips.id"), nullable=False)
