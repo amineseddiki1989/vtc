@@ -1,194 +1,248 @@
-# 🚗 VTC Application - Configuration de Production
+# 🚗 VTC Management System
 
-Application VTC complète avec backend Flask, frontend Next.js, et infrastructure Docker.
+Application complète de gestion de véhicules de transport avec chauffeur (VTC) développée avec FastAPI.
 
-## 📋 Architecture
+## 🚀 Fonctionnalités
+
+### ✅ Fonctionnalités Implémentées
+- **Authentification JWT** sécurisée avec tokens d'accès
+- **Logging de production** avec rotation des fichiers et audit de sécurité  
+- **Configuration sécurisée** avec validation Pydantic V2
+- **Middleware de logging** pour audit complet des requêtes
+- **Validation métier avancée** avec règles de gestion personnalisées
+- **Gestion utilisateur avancée** avec préférences et 2FA
+- **Architecture modulaire** et extensible
+
+### 🔧 Fixes Techniques Appliqués
+- ✅ **Fix AttributeError** : Import explicite de `logging.handlers`
+- ✅ **Fix ValidationInfo** : Compatibilité Pydantic V2 avec `ValidationError`
+- ✅ **Fix Pydantic V2** : Migration complète vers la nouvelle version
+- ✅ **Architecture sécurisée** : Hashage bcrypt, tokens JWT, audit de sécurité
+
+## 📁 Structure du Projet
 
 ```
-vtc-app/
-├── docker-compose.yml      # Orchestration des services
-├── nginx/                  # Configuration proxy reverse
-│   ├── nginx.conf         # Configuration principale
-│   └── sites-enabled/     # Sites virtuels
-├── backend/               # API Flask
-│   ├── Dockerfile
-│   └── requirements.txt
-├── frontend/              # Application Next.js
-│   └── Dockerfile
-├── database/              # Schema PostgreSQL
-│   └── init.sql
-├── scripts/               # Scripts de déploiement
-│   └── deploy.sh
-└── ssl/                   # Certificats SSL
+vtc/
+├── main.py                          # Point d'entrée de l'application
+├── requirements.txt                 # Dépendances Python
+├── .env.example                     # Variables d'environnement exemple
+├── app/
+│   ├── core/
+│   │   ├── auth.py                  # Gestionnaire d'authentification JWT
+│   │   └── database.py              # Configuration base de données
+│   ├── models/
+│   │   └── user_advanced.py         # Modèles utilisateurs avancés
+│   ├── routes/
+│   │   ├── auth.py                  # Routes d'authentification
+│   │   ├── vehicles.py              # Routes véhicules
+│   │   ├── bookings.py              # Routes réservations
+│   │   ├── drivers.py               # Routes chauffeurs
+│   │   └── admin.py                 # Routes administration
+│   ├── services/                    # Services métier
+│   ├── middleware/
+│   │   └── logging_middleware.py    # Middleware de logging
+│   ├── utils/
+│   │   └── production_logger.py     # Logger de production (fix AttributeError)
+│   └── validators/
+│       └── business_logic_validator.py # Validateur métier (fix Pydantic V2)
+├── config/
+│   └── secure_config.py             # Configuration sécurisée (fix ValidationInfo)
+├── backend/                         # Configuration Docker
+├── frontend/                        # Configuration Docker Frontend
+├── database/
+│   └── init.sql                     # Script d'initialisation DB
+└── scripts/
+    └── deploy.sh                    # Script de déploiement
 ```
 
-## 🚀 Déploiement Rapide
+## 🔧 Installation et Démarrage
 
 ### Prérequis
-- Docker & Docker Compose installés
-- Ports 80, 443, 3000, 5000 disponibles
-- Certificats SSL (optionnel pour dev)
+- Python 3.9+
+- PostgreSQL 13+
+- Redis (optionnel)
 
-### 1. Configuration
+### Installation locale
+
+1. **Cloner le dépôt**
+   ```bash
+   git clone https://github.com/amineseddiki1989/vtc.git
+   cd vtc
+   ```
+
+2. **Créer l'environnement virtuel**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Linux/Mac
+   # ou
+   venv\Scripts\activate     # Windows
+   ```
+
+3. **Installer les dépendances**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Configuration**
+   ```bash
+   cp .env.example .env
+   # Éditer le fichier .env avec vos configurations
+   ```
+
+5. **Initialiser la base de données**
+   ```bash
+   # Créer la base de données PostgreSQL
+   createdb vtc_db
+
+   # Appliquer les migrations (si alembic configuré)
+   alembic upgrade head
+   ```
+
+6. **Démarrer l'application**
+   ```bash
+   # Mode développement
+   uvicorn main:app --reload --host 0.0.0.0 --port 8000
+
+   # Mode production
+   gunicorn main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
+   ```
+
+### Démarrage avec Docker
+
 ```bash
-# Cloner le projet
-git clone https://github.com/amineseddiki1989/vtc.git
-cd vtc-app
+# Construire et démarrer tous les services
+docker-compose up -d
 
-# Configuration environnement
-cp .env.example .env
-nano .env  # Modifier les variables si nécessaire
+# Voir les logs
+docker-compose logs -f
+
+# Arrêter les services
+docker-compose down
 ```
-
-### 2. Déploiement automatique
-```bash
-chmod +x scripts/deploy.sh
-./scripts/deploy.sh
-```
-
-### 3. Déploiement manuel
-```bash
-# Construction et démarrage
-docker-compose up -d --build
-
-# Vérification des services
-docker-compose ps
-docker-compose logs
-```
-
-## 🔧 Services
-
-| Service | Port | Description |
-|---------|------|-------------|
-| **Frontend** | 3000 | Interface utilisateur Next.js |
-| **Backend** | 5000 | API REST Flask |
-| **Nginx** | 80/443 | Proxy reverse et SSL |
-| **PostgreSQL** | 5432 | Base de données |
-| **Redis** | 6379 | Cache et sessions |
-
-## 📊 Accès
-
-- **Application:** https://vtc-app.com (production) ou http://localhost:3000 (dev)
-- **API:** https://api.vtc-app.com/api (production) ou http://localhost:5000/api (dev)
-- **Admin:** admin@vtc-app.com / AdminVTC2024!
 
 ## 🛡️ Sécurité
 
-### SSL/TLS
-- Certificats dans `ssl/`
-- Redirection automatique HTTP → HTTPS
-- Headers de sécurité configurés
-
 ### Authentification
-- JWT avec expiration
-- Hashage bcrypt des mots de passe
-- Protection CSRF
+- **JWT tokens** avec expiration configurable
+- **Hachage bcrypt** pour les mots de passe
+- **2FA optionnel** avec TOTP
+- **Rate limiting** sur les tentatives de connexion
 
-### Rate Limiting
-- API: 10 req/s par IP
-- Auth: 5 req/m par IP
+### Audit et Logging
+- **Logging complet** de toutes les requêtes avec IDs uniques
+- **Audit de sécurité** pour tentatives d'authentification
+- **Monitoring des performances** avec alertes requêtes lentes
+- **Rotation automatique** des fichiers de logs
 
-## 📋 Commandes Utiles
+### Configuration
+- **Variables d'environnement** pour toutes les configurations sensibles
+- **Validation Pydantic** de toutes les configurations
+- **Masquage automatique** des données sensibles dans les logs
 
-### Gestion des conteneurs
+## 📋 API Documentation
+
+Une fois l'application démarrée, accédez à :
+- **Swagger UI** : http://localhost:8000/docs
+- **ReDoc** : http://localhost:8000/redoc
+
+### Endpoints principaux
+
+#### Authentification
+- `POST /api/auth/login` - Connexion utilisateur
+- `POST /api/auth/register` - Inscription utilisateur  
+- `POST /api/auth/refresh` - Rafraîchissement token
+- `GET /api/auth/me` - Profil utilisateur
+
+#### Véhicules
+- `GET /api/vehicles/` - Liste des véhicules
+- `POST /api/vehicles/` - Créer un véhicule
+
+#### Réservations
+- `GET /api/bookings/` - Liste des réservations
+- `POST /api/bookings/` - Créer une réservation
+
+#### Administration
+- `GET /api/admin/stats` - Statistiques (auth requise)
+
+## 🧪 Tests
+
 ```bash
-# Démarrer tous les services
-docker-compose up -d
+# Exécuter tous les tests
+pytest
 
-# Arrêter tous les services
-docker-compose down
+# Tests avec couverture
+pytest --cov=app
 
-# Reconstruire et redémarrer
-docker-compose up -d --build
-
-# Voir les logs
-docker-compose logs -f [service]
-
-# Accéder à un conteneur
-docker-compose exec [service] bash
+# Tests spécifiques
+pytest tests/test_auth.py -v
 ```
 
-### Base de données
+## 🚀 Déploiement
+
+### Variables d'environnement de production
+
 ```bash
-# Accéder à PostgreSQL
-docker-compose exec postgres psql -U vtc_user -d vtc_database
+# Sécurité
+DEBUG=false
+ENVIRONMENT=production
+JWT_SECRET_KEY=your_production_secret_key_32_chars_min
 
-# Sauvegarde
-docker-compose exec postgres pg_dump -U vtc_user vtc_database > backup.sql
+# Base de données
+DATABASE_URL=postgresql://user:password@localhost:5432/vtc_prod
 
-# Restauration
-docker-compose exec -T postgres psql -U vtc_user -d vtc_database < backup.sql
+# Logging
+LOG_LEVEL=INFO
 ```
 
-### Monitoring
+### Commande de déploiement
 ```bash
-# Statut des services
+./scripts/deploy.sh
+```
+
+## 🐛 Résolution de Problèmes
+
+### Erreurs courantes
+
+1. **AttributeError: module 'logging' has no attribute 'handlers'**
+   - ✅ **Résolu** : Import explicite ajouté dans `production_logger.py`
+
+2. **ValidationInfo not found (Pydantic V2)**
+   - ✅ **Résolu** : Migration vers `ValidationError` dans `secure_config.py`
+
+3. **Problèmes de validation Pydantic**
+   - ✅ **Résolu** : Compatibilité complète V2 dans `business_logic_validator.py`
+
+### Logs et diagnostic
+
+```bash
+# Logs de l'application
+tail -f /var/log/vtc/vtc_app.log
+
+# Logs Docker
+docker-compose logs -f vtc-backend
+
+# État des services
 docker-compose ps
-
-# Utilisation ressources
-docker stats
-
-# Health checks
-curl http://localhost:3000/health
-curl http://localhost:5000/health
 ```
 
-## 🔄 Mise à jour
+## 🤝 Contribution
 
-```bash
-# Arrêter les services
-docker-compose down
+1. Fork le projet
+2. Créer une branche feature (`git checkout -b feature/AmazingFeature`)
+3. Commit les changements (`git commit -m 'Add AmazingFeature'`)
+4. Push la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrir une Pull Request
 
-# Mettre à jour le code
-git pull origin main
+## 📝 Licence
 
-# Reconstruire et redémarrer
-docker-compose up -d --build
-```
-
-## 🐛 Dépannage
-
-### Problèmes courants
-
-1. **Port déjà utilisé**
-   ```bash
-   sudo netstat -tlnp | grep :3000
-   sudo kill -9 [PID]
-   ```
-
-2. **Problème de permissions**
-   ```bash
-   sudo chown -R $USER:$USER .
-   chmod +x scripts/deploy.sh
-   ```
-
-3. **Base de données non accessible**
-   ```bash
-   docker-compose logs postgres
-   docker-compose restart postgres
-   ```
-
-4. **SSL/HTTPS**
-   - Vérifier les certificats dans `ssl/`
-   - Pour le dev: utiliser HTTP sur localhost
-
-### Logs détaillés
-```bash
-# Tous les services
-docker-compose logs -f
-
-# Service spécifique
-docker-compose logs -f backend
-docker-compose logs -f frontend
-docker-compose logs -f nginx
-```
+Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
 ## 📞 Support
 
-- **Email:** admin@vtc-app.com
-- **GitHub:** https://github.com/amineseddiki1989/vtc
-- **Documentation API:** http://localhost:5000/docs (après démarrage)
+Pour toute question ou problème :
+- Créer une issue sur GitHub
+- Contact : amine.seddiki1989@example.com
 
-## 📄 License
+---
 
-MIT License - Voir LICENSE pour plus de détails.
+**Status du projet** : ✅ Code complet restauré et testé avec tous les fixes de débogage appliqués.

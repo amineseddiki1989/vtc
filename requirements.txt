@@ -1,0 +1,49 @@
+# FastAPI et serveur ASGI
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+gunicorn==21.2.0
+
+# Base de données
+sqlalchemy==2.0.23
+databases[postgresql]==0.8.0
+asyncpg==0.29.0
+alembic==1.12.1
+
+# Authentification et sécurité  
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.6
+
+# Validation et sérialisation
+pydantic[email]==2.5.0
+pydantic-settings==2.1.0
+
+# Middleware et utilitaires
+python-dotenv==1.0.0
+email-validator==2.1.0
+
+# Logging et monitoring
+structlog==23.2.0
+
+# Utilitaires
+python-dateutil==2.8.2
+pytz==2023.3
+requests==2.31.0
+
+# Tests
+pytest==7.4.3
+pytest-asyncio==0.21.1
+httpx==0.25.2
+
+# Développement
+black==23.11.0
+flake8==6.1.0
+mypy==1.7.1
+
+# Production
+redis==5.0.1
+celery==5.3.4
+
+# 2FA (optionnel)
+pyotp==2.9.0
+qrcode[pil]==7.4.2
