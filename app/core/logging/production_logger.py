@@ -120,7 +120,7 @@ class ProductionLoggerManager:
         
         # Logger racine
         root_logger = logging.getLogger()
-        root_logger.setLevel(getattr(logging, self.settings.monitoring.log_level.upper()))
+        root_logger.setLevel(getattr(logging, self.settings.monitoring.log_level.upper() if self.settings.monitoring and self.settings.monitoring.log_level else 'INFO'))
         
         # Supprimer les handlers existants
         for handler in root_logger.handlers[:]:

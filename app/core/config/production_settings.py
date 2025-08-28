@@ -128,7 +128,7 @@ class MonitoringSettings(BaseModel):
     # Logging
     log_level: str = Field(default="INFO")
     log_format: str = Field(default="json")
-    log_file: Optional[str] = Field(default="/var/log/uber_api/app.log")
+    log_file: Optional[str] = Field(default="./logs/app.log")
     log_rotation: str = Field(default="1 day")
     log_retention: str = Field(default="30 days")
     
