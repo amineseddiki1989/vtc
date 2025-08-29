@@ -17,7 +17,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 # Import des modules de l'application
 from app.main_production import app
 from app.core.database.postgresql import get_async_session
-from app.models.user_advanced import User, UserRole, UserStatus, DocumentType
+from app.models.user_advanced import User, UserRole, UserStatus
 from app.models.trip_advanced import Trip, TripStatus, TripType
 from app.services.trip_service_advanced import TripServiceAdvanced, TripEstimateRequest, TripCreateRequest
 from app.services.user_service_advanced import UserServiceAdvanced, UserRegistrationRequest
